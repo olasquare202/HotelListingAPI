@@ -1,10 +1,21 @@
+using HotelListingAPI.Automapper;
+using HotelListingAPI.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var Configuration = builder.Configuration;
+
 // Add services to the container.
+builder.Services.AddDbContext<DatabaseContext>(options =>
+options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
+);
+//Add Automapper
+builder.Services.AddAutoMapper(typeof(Mapping));
 //Configure CORS Policy(i.e Cross Origin Resource Shearing)
 builder.Services.AddCors(e =>
 {
