@@ -1,5 +1,7 @@
 using HotelListingAPI.Automapper;
 using HotelListingAPI.Data;
+using HotelListingAPI.IRepository;
+using HotelListingAPI.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -14,6 +16,7 @@ var Configuration = builder.Configuration;
 builder.Services.AddDbContext<DatabaseContext>(options =>
 options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
 );
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 //Add Automapper
 builder.Services.AddAutoMapper(typeof(Mapping));
 //Configure CORS Policy(i.e Cross Origin Resource Shearing)
@@ -44,7 +47,7 @@ Log.Logger = new LoggerConfiguration().WriteTo.File(path: "c:\\hotellistings\\lo
 //	Log.CloseAndFlush();
 //}
 builder.Host.UseSerilog();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(u =>
