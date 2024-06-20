@@ -4,6 +4,7 @@ using HotelListingAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelListingAPI.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240529091339_AddedUserIdentity")]
+    partial class AddedUserIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,18 +135,6 @@ namespace HotelListingAPI.Migrations
                             Id = 3,
                             Name = "Cayman Island",
                             ShortName = "CI"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Nigeria",
-                            ShortName = "NG"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "South Africa",
-                            ShortName = "SA"
                         });
                 });
 
@@ -200,22 +190,6 @@ namespace HotelListingAPI.Migrations
                             CountryId = 2,
                             Name = "Grand Palldium",
                             Rating = 4.0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Address = "Akure, Ondo State",
-                            CountryId = 4,
-                            Name = "A & T Presidential Hotel",
-                            Rating = 5.0
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Address = "Congi",
-                            CountryId = 5,
-                            Name = "Tinubu Hotel",
-                            Rating = 5.0
                         });
                 });
 
@@ -244,22 +218,6 @@ namespace HotelListingAPI.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1452d7c6-099d-4441-8d51-76945f4d52f3",
-                            ConcurrencyStamp = "28fa64c3-2e0a-4499-9714-68a722f099e3",
-                            Name = "User",
-                            NormalizedName = "USER"
-                        },
-                        new
-                        {
-                            Id = "357516ce-6be4-4af5-886f-4641baa3230e",
-                            ConcurrencyStamp = "223d1e2f-28ce-47fa-8254-f6ee2b40105b",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

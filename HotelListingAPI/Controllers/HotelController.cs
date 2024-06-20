@@ -2,6 +2,7 @@
 using HotelListingAPI.IRepository;
 using HotelListingAPI.Model;
 using HotelListingAPI.Model.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,10 +40,11 @@ namespace HotelListingAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please Try Again Later");
             }
         }
+        [Authorize]
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)] 
         public async Task<IActionResult> GetHotel(int id)
         {
             try

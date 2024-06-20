@@ -1,7 +1,10 @@
+using HotelListingAPI;
 using HotelListingAPI.Automapper;
 using HotelListingAPI.Data;
 using HotelListingAPI.IRepository;
 using HotelListingAPI.Repository;
+using HotelListingAPI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -17,8 +20,18 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
 );
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IAuthManager, AuthManager>();
 //Add Automapper
 builder.Services.AddAutoMapper(typeof(Mapping));
+//Add IdentityUser
+
+
+builder.Services.ConfigureJWT(Configuration);
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();//I configure d IdentityUser in
+									 //ServiceExtensions class then registered it here
+									 //To avoid much codes in this Program.cs file
+
 //Configure CORS Policy(i.e Cross Origin Resource Shearing)
 builder.Services.AddCors(e =>
 {
@@ -84,6 +97,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("OlaoluwaPolicy");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
