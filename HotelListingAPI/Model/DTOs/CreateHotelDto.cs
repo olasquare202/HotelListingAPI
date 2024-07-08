@@ -9,7 +9,7 @@ namespace HotelListingAPI.Model.DTOs
         [StringLength(maximumLength: 20, ErrorMessage = "Hotel name must not be more than 20 characters")]
         public string Name { get; set; }
         [Required]
-        [StringLength(maximumLength: 250, ErrorMessage = "Hotel name must not be more than 250 characters")]
+        [StringLength(maximumLength: 250, ErrorMessage = "Hotel Address must not be more than 250 characters")]
         public string Address { get; set; }
         [Required]
         [Range(1, 5)]

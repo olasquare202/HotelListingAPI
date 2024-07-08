@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using HotelListingAPI;
 using HotelListingAPI.Automapper;
 using HotelListingAPI.Data;
@@ -5,6 +6,7 @@ using HotelListingAPI.IRepository;
 using HotelListingAPI.Repository;
 using HotelListingAPI.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -19,6 +21,11 @@ var Configuration = builder.Configuration;
 builder.Services.AddDbContext<DatabaseContext>(options =>
 options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
 );
+//builder.Services.ConfigureHttpCacheHeaders();
+builder.Services.AddMemoryCache();
+builder.Services.ConfigureRateLimiting();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddResponseCaching();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthManager, AuthManager>();
 //Add Automapper
@@ -31,6 +38,7 @@ builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();//I configure d IdentityUser in
 									 //ServiceExtensions class then registered it here
 									 //To avoid much codes in this Program.cs file
+builder.Services.ConfigureAPIVersioning();
 
 //Configure CORS Policy(i.e Cross Origin Resource Shearing)
 builder.Services.AddCors(e =>
@@ -60,7 +68,15 @@ Log.Logger = new LoggerConfiguration().WriteTo.File(path: "c:\\hotellistings\\lo
 //	Log.CloseAndFlush();
 //}
 builder.Host.UseSerilog();
-builder.Services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+builder.Services.AddControllers(config => //This is how to do Global caching configuration
+{
+	config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
+	{
+		Duration = 120
+	});
+}).AddNewtonsoftJson(opt =>
+opt.SerializerSettings.ReferenceLoopHandling =
+Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(u =>
@@ -94,9 +110,17 @@ if (app.Environment.IsDevelopment())
 	);
 }
 
+app.ConfigureGlobalExceptionHandler();
+
 app.UseHttpsRedirection();
 
 app.UseCors("OlaoluwaPolicy");
+
+app.UseResponseCaching();
+
+//app.UseHttpCacheHeaders();
+
+app.UseIpRateLimiting();
 
 app.UseAuthentication();
 

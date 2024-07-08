@@ -24,7 +24,7 @@ namespace HotelListingAPI.Controllers
             ILogger<AccountController> logger, IMapper mapper, IAuthManager authManager)
         {
             _userManager = userManager;
-           // _signInManager = signInManager;
+            // _signInManager = signInManager;
             _logger = logger;
             _mapper = mapper;
             _authManager = authManager;
@@ -36,7 +36,7 @@ namespace HotelListingAPI.Controllers
         public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
             _logger.LogInformation($"Registration Attempt for {userDto.Email}");
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -45,7 +45,7 @@ namespace HotelListingAPI.Controllers
                 var user = _mapper.Map<ApiUser>(userDto);
                 user.UserName = userDto.Email;//make d UserName from d baseClass(IdentityUser) to = Email in d UserDto
                 var result = await _userManager.CreateAsync(user, userDto.Password);//This hashed d password 
-                if (!result.Succeeded) 
+                if (!result.Succeeded)
                 {
                     foreach (var error in result.Errors)
                     {
@@ -75,13 +75,13 @@ namespace HotelListingAPI.Controllers
             try
             {
                 //if (await _authManager.ValidateUser(loginUserDto) == false) OR
-                    if (!await _authManager.ValidateUser(loginUserDto))
+                if (!await _authManager.ValidateUser(loginUserDto))
                 {
                     return Unauthorized(loginUserDto);
                 }
-               var Token = await _authManager.CreateToken();
+                var Token = await _authManager.CreateToken();
                 //return Ok(Token);
-                return Accepted(new { Token = await _authManager.CreateToken()});
+                return Accepted(new { Token = await _authManager.CreateToken() });
             }
             catch (Exception ex)
             {
