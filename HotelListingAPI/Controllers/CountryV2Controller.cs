@@ -26,12 +26,12 @@ namespace HotelListingAPI.Controllers
         [Route("GetCountries")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCountries()
+        public  IActionResult GetCountries()
         {
             try
             {
               
-                return Ok(_db.Countries);
+               return Ok(_db.Countries);
             }
             catch (Exception ex)
             {

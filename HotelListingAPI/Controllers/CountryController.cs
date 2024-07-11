@@ -11,6 +11,7 @@ using System.Collections.ObjectModel;
 
 namespace HotelListingAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CountryController : ControllerBase
@@ -25,6 +26,7 @@ namespace HotelListingAPI.Controllers
             _logger = logger;
             _mapper = mapper;
         }
+        //[AllowAnonymous]//This will override the aboved Authorize Keyword
         [HttpGet]
         //[ResponseCache(Duration = 60)] //when you do caching on API individually
         [ResponseCache(CacheProfileName = "120SecondsDuration")]//Not individually but globally
@@ -47,6 +49,7 @@ namespace HotelListingAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please Try Again Later");
             }
         }
+        [AllowAnonymous]//This will override the aboved Authorize Keyword(i.e u are allowed to GetCountriesByPage)
         [HttpGet]
         [Route("GetCountriesByPage")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -65,6 +68,7 @@ namespace HotelListingAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please Try Again Later");
             }
         }
+        [Authorize]//Dis is not neccessary bcos it already written at d first line of d Controller aboved
         [HttpGet("{id:int}", Name = "GetCountry")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -112,8 +116,8 @@ namespace HotelListingAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please Try Again Later");
             }
         }
-        //[Authorize]
-        [HttpPut]
+        //[Authorize]//Dis is not neccessary bcos it already written at d first line of d Controller aboved
+        [HttpPut]//Only d Authorized user is allowed to update
         [Route("UpdateCountry")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -158,7 +162,7 @@ namespace HotelListingAPI.Controllers
                 return StatusCode(500, "Internal Server Error. Please Try Again Later");
             }
         }
-        [HttpDelete]
+        [HttpDelete]//Only d Authorized user is allowed to delete
         //[HttpGet("{id:int}", Name = "DeleteCountry")]
         [Route("DeleteCountry")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

@@ -112,7 +112,7 @@ namespace HotelListingAPI
                     Limit = 1,//one call
                     Period = "5s"//one second
                 },
-                // new RateLimitRule
+                // new RateLimitRule //YOU can have multiple rules(i.e diff. rule for individual API) as below
                 //{
                 //    Endpoint = "*",//you can specify an API and set d limit call as well as d period
                 //    Limit = 20,//one call

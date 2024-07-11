@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Events;
+using System.Security.Cryptography.Xml;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,15 +88,43 @@ builder.Services.AddSwaggerGen(u =>
 	{
 		Title = "Hotel Listing",
 		Version = "v1",
-		Description = "This is my HotelListing Web API associated with different countries",
+		//Description = "This is my HotelListing Web API associated with different countries",
+		Description = "This Robust Hotel Listing web API was built using ASP.NET Core 6.\r\n\r\n with Entity Framework and Enterprise Level Design Patterns.\r\n\r\n which allows only Authorized Users to access the API and perform CRUD operations.\r\n\r\n The following features were implemented:\r\n\r\n Logging events & errors, Global Error Handling, CORS Policy,\r\n\r\n JWT Bearer, C# Identity, Rate Limiting, API Documentation using SwaggerUI,\r\n\r\n API Versionning, Pagination, Global Caching for all APIs, Unit Of Work, Generic Repository Pattern and lots more.\r\n\r\n CHECK MY PORTFOLIO VIA THE LINK BELOW\r\n\r\n Feel free to Register and Login, then use the Token generated to access all the APIs\r\n\r\nTechnologies Used: C#, EFCore, ASP.NETCore, MSSQL Server, SwaggerUI(for Bearer Token), Postman and GitHub.",
+
 		Contact = new OpenApiContact()
 		{
 			Email = "olaoluwaesan.dev@gmail.com",
-			Name = "Olaoluwa Esan",
+			Name = "Check MY Portfolio",
 			Url = new Uri("https://olasquare202.github.io/Boostrap-V5-Project-with-SASS/")
+			
 		}
 	});
+	u.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+	{
+		Description = "Enter 'Bearer' give space then paste the bearer Token.\r\n\r\n" +
+					  "Example: \"Bearer eyjoo354bdjkhvq83esno\"",
+		Name = "Authorization",
+		In = ParameterLocation.Header,
+		Type = SecuritySchemeType.ApiKey,
+		Scheme = "Bearer"
+	});
+	u.AddSecurityRequirement(new OpenApiSecurityRequirement
+	{
+		{
+			new OpenApiSecurityScheme
+		   {
+			Reference = new OpenApiReference
+			{
+				Type = ReferenceType.SecurityScheme,
+				Id = "Bearer"
+			}
+		},
+			new String[]{ }
+		}
+
+	});
 });
+
 
 var app = builder.Build();
 
@@ -103,10 +132,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
-	app.UseSwaggerUI(options =>
-	
+	app.UseSwaggerUI(options => 
 		options.SwaggerEndpoint("/swagger/v1/swagger.json", "Hotel Listing Web API v1")
 		
+
 	);
 }
 
